@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>ZEROTRACE | Elite Access</title>
+    <style>
+        body {
+            background: #0a0e27;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: white;
+        }
+        .container {
+            background: #151935;
+            padding: 50px;
+            border-radius: 40px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+            border: 1px solid #2a2e45;
+        }
+        .logo-img { font-size: 80px; margin-bottom: 15px; display: block; }
+        .logo-text {
+            font-size: 40px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, #6c63ff, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .sub-text { color: #666; font-size: 14px; margin-bottom: 25px; letter-spacing: 1px; }
+        input {
+            width: 100%;
+            padding: 18px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            border: none;
+            background: #0a0e27;
+            color: white;
+            box-sizing: border-box;
+            border: 1px solid #2a2e45;
+            font-size: 15px;
+        }
+        input::placeholder { color: #555; }
+        input:focus {
+            outline: none;
+            border-color: #6c63ff;
+            box-shadow: 0 0 25px rgba(108,99,255,0.1);
+        }
+        button {
+            width: 100%;
+            padding: 18px;
+            border-radius: 15px;
+            border: none;
+            background: #6c63ff;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 8px 0 #4834d4;
+            margin-top: 10px;
+        }
+        button:hover { background: #7d75ff; transform: translateY(-2px); }
+        button:active { box-shadow: 0 0px 0 #4834d4; transform: translateY(8px); }
+        .distributors {
+            margin-top: 30px;
+            color: #666;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 10px;
+        }
+        .distributors:hover { color: #6c63ff; background: rgba(108,99,255,0.05); }
+        #distDropdown {
+            display: none;
+            margin-top: 20px;
+            background: #0a0e27;
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid #2a2e45;
+            animation: fadeUp 0.3s ease;
+        }
+        #distDropdown .dev-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 8px 0;
+        }
+        #distDropdown .dev-icon { font-size: 24px; }
+        #distDropdown .dev-name { font-weight: 700; color: #fff; }
+        .tg-link {
+            color: #6c63ff;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 20px;
+            border-radius: 10px;
+            background: rgba(108,99,255,0.05);
+            transition: 0.3s;
+            display: inline-block;
+            margin-top: 5px;
+        }
+        .tg-link:hover { background: rgba(108,99,255,0.15); transform: scale(1.02); }
+        .close-dropdown {
+            color: #555;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 10px;
+            display: inline-block;
+            transition: 0.3s;
+        }
+        .close-dropdown:hover { color: #ff6b6b; }
+        @keyframes fadeUp { 0% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: translateY(0); } }
+        .login-error {
+            background: rgba(255,107,107,0.08);
+            border: 1px solid rgba(255,107,107,0.15);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #ff6b6b;
+            font-size: 13px;
+            margin-top: 15px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            text-align: right;
+        }
+        .login-error i { font-size: 16px; }
+        @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+        .login-error.shake { animation: shake 0.4s ease; }
+        .footer {
+            margin-top: 25px;
+            color: #333;
+            font-size: 11px;
+            letter-spacing: 1px;
+            border-top: 1px solid rgba(255,255,255,0.03);
+            padding-top: 20px;
+        }
+        .footer span { color: #6c63ff; }
+        @media (max-width: 480px) {
+            .container { padding: 30px 25px; width: 90%; border-radius: 25px; }
+            .logo-text { font-size: 30px; }
+            .logo-img { font-size: 60px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <span class="logo-img">☠️</span>
+        <div class="logo-text">ZEROTRACE</div>
+        <p class="sub-text">✦ Elite Access ✦</p>
+        <form id="loginForm" onsubmit="return handleLogin(event)">
+            <input type="text" id="username" placeholder="اسم المستخدم / البريد الإلكتروني" required>
+            <input type="password" id="password" placeholder="كلمة المرور" required>
+            <div id="loginError" class="login-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorMessage">البريد الإلكتروني أو كلمة المرور غير صحيحة</span>
+            </div>
+            <button type="submit">🔐 تسجيل الدخول</button>
+        </form>
+        <div class="distributors" onclick="toggleDistributors()">
+            <i class="fas fa-users"></i> الموزعون الرسميون
+        </div>
+        <div id="distDropdown">
+            <div class="dev-item">
+                <span class="dev-icon">👑</span>
+                <span class="dev-name">ZeroTrace</span>
+                <span style="color:#6c63ff; font-size:11px; background:rgba(108,99,255,0.1); padding:2px 10px; border-radius:20px;">المطور</span>
+            </div>
+            <div style="text-align:center; margin-top:5px;">
+                <a href="https://t.me/op_mf" target="_blank" class="tg-link">
+                    <i class="fab fa-telegram"></i> @op_mf
+                </a>
+            </div>
+            <div style="text-align:center; margin-top:10px;">
+                <span class="close-dropdown" onclick="closeDistributors()">✕ إغلاق</span>
+            </div>
+        </div>
+        <div class="footer">
+            <span>☠️</span> ZEROTRACE · v2.0.0
+        </div>
+    </div>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <script>
+        const VALID_EMAIL = "qarawimohammad519@gmail.com";
+        const VALID_PASSWORD = "ZeroTrace331316944848";
+        function toggleDistributors() {
+            const dropdown = document.getElementById('distDropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+        function closeDistributors() {
+            document.getElementById('distDropdown').style.display = 'none';
+        }
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorDiv = document.getElementById('loginError');
+            if (username === VALID_EMAIL && password === VALID_PASSWORD) {
+                errorDiv.style.display = 'none';
+                localStorage.setItem('loggedIn', 'true');
+                window.location.href = 'dashboard.html';
+            } else {
+                errorDiv.style.display = 'flex';
+                errorDiv.classList.remove('shake');
+                void errorDiv.offsetWidth;
+                errorDiv.classList.add('shake');
+            }
+            return false;
+        }
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('distDropdown');
+            const btn = document.querySelector('.distributors');
+            if (btn && !btn.contains(e.target) && dropdown && !dropdown.contains(e.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const form = document.getElementById('loginForm');
+                if (form && document.activeElement?.closest('form') === form) {
+                    e.preventDefault();
+                    handleLogin(e);
+                }
+            }
+        });
+        if (localStorage.getItem('loggedIn') === 'true') {
+            window.location.href = 'dashboard.html';
+        }
+        console.log('☠️ ZEROTRACE — جميع الحقوق محفوظة © 2099');
+        console.log('📌 المطور: ZeroTrace | @op_mf');
+    </script>
+</body>
+</html>
